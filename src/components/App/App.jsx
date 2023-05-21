@@ -81,31 +81,46 @@ class App extends Component {
     );
   };
 
+  componentDidUpdate() {
+    localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+  }
+
+  componentDidMount() {
+    try {
+      const contacts = JSON.parse(localStorage.contacts);
+      this.setState({contacts})
+    } catch (error) {
+      Notify.failure(`Can't reade from Local Storage. ${error.message}`);
+    }
+  }
+
   render() {
     return (
       <Container>
-       
         <Button type="button" onClick={this.handleFillPhonebook}>
           Randomise Data
         </Button>
-        
-        <Section title="Add Contact"> 
+
+        <Section title="Add Contact">
           <ContactEditor onSubmit={this.addContact} />
-          </Section>
-        
-        <Section title="Filter by Name"> 
-        <Filter
-          filter={this.state.filter}
-          onChange={this.onChange}
-          onReset={this.handleResetFilter}
+        </Section>
+
+        <Section title="Filter by Name">
+          <Filter
+            filter={this.state.filter}
+            onChange={this.onChange}
+            onReset={this.handleResetFilter}
           />
         </Section>
-        <Section title="Contacts List"> 
-        <ContactsList
-          contacts={this.filterContacts(this.state.contacts, this.state.filter)}
-          onClick={this.handleDeleteContact}
+        <Section title="Contacts List">
+          <ContactsList
+            contacts={this.filterContacts(
+              this.state.contacts,
+              this.state.filter
+            )}
+            onClick={this.handleDeleteContact}
           />
-          </Section>
+        </Section>
       </Container>
     );
   }
