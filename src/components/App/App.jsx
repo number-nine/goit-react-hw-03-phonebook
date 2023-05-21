@@ -86,12 +86,15 @@ class App extends Component {
   }
 
   componentDidMount() {
-    try {
-      const contacts = JSON.parse(localStorage.contacts);
-      this.setState({contacts})
-    } catch (error) {
-      Notify.failure(`Can't reade from Local Storage. ${error.message}`);
+    if (!localStorage.getItem('contacts')) {
+      return;
     }
+      try {
+        const contacts = JSON.parse(localStorage.contacts);
+        this.setState({ contacts });
+      } catch (error) {
+        Notify.failure(`Can't reade from Local Storage. ${error.message}`);
+      }
   }
 
   render() {
